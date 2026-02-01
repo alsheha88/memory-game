@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+  href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+  rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="stylesheet" href="style.css">
+  <title>Frontend Mentor | Memory game</title>
+</head>
+
+<body>
+  <!-- Game setup start -->
+  <section class="start-page">
+    <div class="wrapper">
+      <img src="./assets/logo.svg" alt="">
+      <div class="form-wrapper">
+        <form action="">
+          <div class="theme-selection form-selection">
+            <span>Select Theme</span>
+            <div class="selection-box">
+              <div class="theme-option">
+                <label for="numbers">Numbers</label>
+                <input type="radio" name="numbers" id="numbers">
+              </div>
+              <div class="theme-option">
+                <label for="icons">Icons</label>
+                <input type="radio" name="icons" id="icons">
+              </div>
+            </div>
+          </div>
+          <div class="player-selection form-selection">
+            <span>Number of Players</span>
+            <div class="selection-box">
+              <div class="player-option">
+                <label for="player1">1</label>
+                <input type="radio" name="player1" id="player1">
+              </div>
+              <div class="player-option">
+                <label for="player2">2</label>
+                <input type="radio" name="player2" id="player2">
+              </div>
+              <div class="player-option">
+                <label for="player3">3</label>
+                <input type="radio" name="player3" id="player3">
+              </div>
+              <div class="player-option">
+                <label for="player4">4</label>
+                <input type="radio" name="player4" id="player4">
+              </div>
+            </div>
+          </div>
+          <div class="grid-size-selection form-selection">
+            <span>Grid Size</span>
+            <div class="selection-box">
+              <div class="grid-option">
+                <label for="grid-4">4x4</label>
+                <input type="radio" name="4x4" id="grid-4">
+              </div>
+              <div class="grid-option">
+                <label for="grid-6">6x6</label>
+                <input type="radio" name="6x6" id="grid-6">
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="orange-btn"> Start Game</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- Game setup end -->
+
+  <!-- Game board start -->
+  <section class="game-grid">
+    <header>
+        <img src="./assets/logo.svg" alt="">
+      <div class="game-buttons">
+        <button data-action="restart" id="restart" class="orange-btn">Restart</button>
+        <button data-action="new-game" id="new-game" class="grey-btn">New Game</button>
+      </div>
+    </header>
+    <div id="grid" data-grid="" >
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+      
+    </div>
+    <div class="multiplayer-stats">
+      <div class="score-card">
+        <!-- <span>Player 1</span>
+        <p>5</p> -->
+      </div>
+      <div class="score-card">
+        <!-- <span>Player 1</span>
+        <p>5</p> -->
+      </div>
+      <div class="score-card">
+        <!-- <span>Player 1</span>
+        <p>5</p> -->
+      </div>
+      
+    </div>
+    <div class="solo-stats">
+      <div class="score-card">
+        <span>Time</span>
+        <p>0:00</p>
+      </div>
+      <div class="score-card">
+        <span>Time</span>
+        <p>0:00</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="results-modal">
+    <div class="results-container">
+      <div class="modal-heading">
+        <h1>You did it!</h1>
+        <span>Game over! Here’s how you got on…</span>
+      </div>
+      <div class="results-box">
+        <div class="results-row">
+          <div class="player-results">
+            <span>Test</span>
+            <p>123</p>
+          </div>
+        </div>
+        <div class="results-row">
+          <div class="player-results">
+            <span>Test</span>
+            <p>123</p>
+          </div>
+        </div>
+        <div class="results-row">
+          <div class="player-results">
+            <span>Test</span>
+            <p>123</p>
+          </div>
+        </div>
+        <div class="results-row">
+          <div class="player-results">
+            <span>Test</span>
+            <p>123</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" data-action="restart" id="resultsRestartGame" class="orange-btn">Restart</button>
+        <button type="button" data-action="new-game" id="setupNewGame" class="grey-btn">Setup New Game</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-modal">
+    <div class="menu-container">
+      <button type="button" data-action='restart' id="menuRestartGame" class="orange-btn">Restart</button>
+      <button type="button" data-action="new-game" id="newGame" class="grey-btn">New Game</button>
+      <button type="button" data-action="resume-game" id="resumeGame" class="grey-btn">Resume Game</button>
+    </div>
+  </div> 
+  <script src="./index.js"></script>
+</body>
+
+</html>
