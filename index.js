@@ -1,3 +1,6 @@
+
+window.addEventListener("resize", updatePlayerLabels);
+// DOM queries
 const gameGrid = document.querySelector("#grid");
 const themeInput = document.getElementsByName("theme");
 const numberOfPlayers = document.getElementsByName("players");
@@ -6,7 +9,13 @@ const submitBtn = document.querySelector("#submitBtn");
 const form = document.querySelector("form");
 const multiPlayer = document.querySelector('.multiplayer-stats');
 const soloPlayer = document.querySelector('.solo-stats');
+const newGame = document.querySelectorAll('[data-action="new-game"]');
+const restartGame = document.querySelectorAll('[data-action="restart"]');
+const menuButton = document.querySelector('#menu');
+const menuModal = document.querySelector('.menu-modal');
 
+
+// gameState object
 const gameState = {
     playersOption: undefined,
     players: undefined,
@@ -30,28 +39,124 @@ const gameState = {
     index: 0,
     counter: 0,
     playersRanking: [],
-
+    testStartTime: null,
+    timerValue: 0,
+    currentPlayer: 0,
 }
 
-themeInput.forEach((input) => input.addEventListener("click", setGameConditions));
-numberOfPlayers.forEach((input) => input.addEventListener("click", setGameConditions));
-gridSize.forEach((input) => input.addEventListener("click", setGameConditions));
-form.addEventListener("submit", (e) => {
-	e.preventDefault();
-	displayGameGrid();
-});
-function populateRandomNumbers(){
-    const length = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2
-    for (let i = 0; i < length; i++){
-        gameState.numbers.push(i);
-        gameState.numbers.push(i);
-        gameState.randomIcons.push(gameState.icons[i])
-        gameState.randomIcons.push(gameState.icons[i])
+// setup / reset functions
+function setupNewGame(){
+    // Stop running timer
+    stopTimer();
+
+    // Reset state
+    gameState.playersOption = undefined;
+    gameState.players = undefined;
+    gameState.theme = undefined;
+    gameState.gridSelection = undefined;
+
+    gameState.numbers = [];
+    gameState.randomNumbersArray = [];
+    gameState.randomIcons = [];
+    gameState.randomIconsArray = [];
+
+    gameState.intervalId = null;
+    gameState.startGame = false;
+    gameState.soloMovesCount = 0;
+    gameState.minutes = 0;
+    gameState.seconds = 0;
+    gameState.correctPairsCount = 0;
+    gameState.timerValue = 0;
+
+    gameState.selectedCard = [];
+    gameState.selectedItem = [];
+    gameState.correcChoice = false;
+
+    gameState.playersScores = [];
+    gameState.playersRanking = [];
+
+    gameState.index = 0;
+    gameState.counter = 0;
+    gameState.testStartTime = null;
+
+    // Clear dynamic DOM
+    gameGrid.innerHTML = '';
+    multiPlayer.innerHTML = '';
+    soloPlayer.innerHTML = '';
+
+    multiPlayer.style.display = 'none';
+    soloPlayer.style.display = 'none';
+
+    const resultsModal = document.querySelector('.results-modal');
+    if (resultsModal) resultsModal.style.display = 'none';
+
+    const menuModal = document.querySelector('.menu-modal');
+    if (menuModal) menuModal.style.display = 'none';
+
+    const resultsContainer = document.querySelector('.results-container');
+    if (resultsContainer) resultsContainer.innerHTML = '';
+
+    // Show setup screen again
+    document.querySelector('.game-grid').style.display = 'none';
+    document.querySelector('.start-page').style.display = 'flex';
+}
+
+function restartCurrentGame(){
+    stopTimer();
+
+    // Reset state (except for game conditions)
+    gameState.numbers = [];
+    gameState.randomNumbersArray = [];
+    gameState.randomIcons = [];
+    gameState.randomIconsArray = [];
+    gameState.startGame = false;
+    gameState.soloMovesCount = 0;
+    gameState.minutes = 0;
+    gameState.seconds = 0;
+    gameState.correctPairsCount = 0;
+    gameState.currentPlayer = 0;
+    
+
+    gameState.selectedCard = [];
+    gameState.selectedItem = [];
+    gameState.correcChoice = false;
+
+    gameState.playersScores = [];
+    gameState.playersRanking = [];
+
+
+    gameState.index = 0;
+    gameState.counter = 0;
+    gameState.intervalId = setInterval(evaluateTimer, 50);
+    if (menuModal.style.display === 'flex') {
+        menuModal.style.display = 'none';
     }
-    gameState.randomNumbersArray = gameState.numbers.sort(() => Math.random() - 0.5);
-    gameState.randomIconsArray = gameState.randomIcons.sort(() => Math.random() - 0.5);
+    if (gameState.playersOption === 'player1') {
+        gameState.testStartTime = Date.now();
+        gameState.timerValue = Date.now() - gameState.testStartTime;
+        document.querySelector('.move-count').textContent = '0';
+    }
+    
+    if (gameState.playersOption !== 'player1') {
+        document.querySelectorAll('.score-card .player1-score, .score-card .player2-score, .score-card .player3-score, .score-card .player4-score').forEach((score) => {
+            score.dataset.score = 0;
+            score.innerText = '0';
+        })
+        document.querySelectorAll('.score-card').forEach((score) => score.classList.remove('player-turn'));
+        document.querySelectorAll('.current-turn').forEach((turn) => turn.classList.remove('show'));
+    }
+    document.querySelectorAll('.grid-item').forEach((item) => {
+        item.classList.remove('selected-card', 'selected', 'correct');
+        
+    }) 
+    document.querySelectorAll('h1').forEach((item) => {
+        item.classList.remove('selected-card');
+    })
+    
 }
+restartGame.forEach((button) => button.addEventListener('click', restartCurrentGame));
 
+// configuration / setup helpers
 function setGameConditions() {
 	themeInput.forEach((input) => {
 		if (input.checked) {
@@ -96,6 +201,20 @@ function setGridSize() {
 	populateGridItem();
     setPlayers();
 }
+
+// grid creation
+function populateRandomNumbers(){
+    const length = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2
+    for (let i = 0; i < length; i++){
+        gameState.numbers.push(i);
+        gameState.numbers.push(i);
+        gameState.randomIcons.push(gameState.icons[i])
+        gameState.randomIcons.push(gameState.icons[i])
+    }
+    gameState.randomNumbersArray = gameState.numbers.sort(() => Math.random() - 0.5);
+    gameState.randomIconsArray = gameState.randomIcons.sort(() => Math.random() - 0.5);
+}
+
 function populateGridItem() {
     const length = parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"));
     populateRandomNumbers()
@@ -121,6 +240,7 @@ function populateGridItem() {
     document.querySelectorAll('.grid-item').forEach((item) => item.addEventListener('click', selectCard))
 }
 
+// player box creation
 function populateMulitPlayersBox() {
     for (let i = 0; i < parseInt(gameState.players); i++) {
         const span = document.createElement('span');
@@ -150,7 +270,7 @@ function updatePlayerLabels() {
   const scores = document.querySelectorAll(".score-card span");
 
   scores.forEach((span, index) => {
-    span.innerText = `${window.innerWidth > 550 ? "Player" : "P"} ${index + 1}`;
+    span.innerText = `${window.innerWidth > 600 ? "Player" : "P"} ${index + 1}`;
   });
 }
 function populateSoloPlayerBox(){
@@ -202,10 +322,12 @@ function setPlayers(){
         break;
     }
 }
+
+// gameplay flow
 function selectCard(e){
     document.querySelectorAll('.grid-item').forEach((item) => {
         if (e.target.closest('.grid-item') === item){
-             item.firstElementChild.classList.add('selected-card');
+            item.firstElementChild.classList.add('selected-card');
             item.classList.add('selected'); 
             gameState.selectedCard.push(e.target.dataset.value)
             gameState.selectedItem.push(e.target)
@@ -254,12 +376,13 @@ function playerTurn(){
             document.querySelectorAll('.score-card')[gameState.index].lastElementChild.innerText = currentScore + 1;
             gameState.playersScores[gameState.index] = currentScore + 1;
             gameState.correcChoice = false
+        } else{
+                gameState.playersScores[gameState.index] = parseInt(document.querySelectorAll('.score-card')[gameState.index].lastElementChild.dataset.score);
         }
         gameState.playersRanking = gameState.playersScores.map((score, index) => {
             return {score, playerNumber: (index + 1)}
         })
         gameState.playersRanking.sort((a, b) => b.score - a.score)
-        console.log(gameState.playersRanking) 
         if (gameState.counter % 2 === 0) {
             gameState.index++;
             if (gameState.index >= gameState.playersNumber) {
@@ -295,6 +418,8 @@ function displaySoloMoveCount(){
     gameState.soloMovesCount++;
     document.querySelector('.move-count').textContent = Math.floor(gameState.soloMovesCount / 2)
 }
+
+// (solo/multiplayer results)
 function displaySoloResults(){
     if (gameState.playersOption !== 'player1') return;
     stopTimer()
@@ -322,14 +447,14 @@ function displaySoloResults(){
             <button type="button" data-action="restart" id="resultsRestartGame" class="orange-btn">Restart</button>
             <button type="button" data-action="new-game" id="setupNewGame" class="grey-btn">Setup New Game</button>
         </div>`
+        document.getElementById('setupNewGame').addEventListener('click', setupNewGame);
+        document.getElementById('resultsRestartGame').addEventListener('click', restartCurrentGame);
 }
 function displayMultiPlayerResults(){
     if (gameState.playersOption === 'player1') return;
-    // Logic to display multiplayer results goes here
     const pairs = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2 
     console.log(gameState.correctPairsCount, pairs)
     if (gameState.correctPairsCount === pairs){
-        
         document.querySelector('.results-modal').style.display = 'flex'
         document.querySelector('.results-container').innerHTML = `
         <div class="modal-heading">
@@ -349,12 +474,14 @@ function displayMultiPlayerResults(){
         <div class="modal-buttons">
         <button type="button" data-action="new-game" id="setupNewGame" class="grey-btn">Setup New Game</button>
         </div>`
+        document.getElementById('setupNewGame').addEventListener('click', setupNewGame);
     }
 }
+
+// timer helpers
 function evaluateTimer(){
-    let timerValue = Date.now() - gameState.testStartTime;
-    timerValue = Math.floor(timerValue / 1000);
-    renderTimer(timerValue);
+    gameState.timerValue = Math.floor((Date.now() - gameState.testStartTime) / 1000);
+    renderTimer(gameState.timerValue);
     const pairs = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2  
     if (gameState.correctPairsCount === pairs){
         displaySoloResults()
@@ -371,4 +498,34 @@ function stopTimer() {
         gameState.intervalId = null;
     }
 }
+
+// menu / modal helpers (menu/modal)
+function displayMenu(){
+    if (menuModal.style.display === 'flex') {
+        menuModal.style.display = 'none';
+    } else {
+        menuModal.style.display = 'flex';
+        stopTimer();
+    }
+}
+function resumeGame(){
+    menuModal.style.display = 'none';
+    if (gameState.playersOption === 'player1' && !gameState.restartGame) {
+        gameState.testStartTime = Date.now() - (gameState.timerValue * 1000);
+        gameState.intervalId = setInterval(evaluateTimer, 50);
+    }
+}
+
+// event listeners
+document.querySelector("#menuRestartGame").addEventListener('click', restartCurrentGame);
+newGame.forEach((button) => button.addEventListener('click', setupNewGame));
+themeInput.forEach((input) => input.addEventListener("click", setGameConditions));
+numberOfPlayers.forEach((input) => input.addEventListener("click", setGameConditions));
+gridSize.forEach((input) => input.addEventListener("click", setGameConditions));
+form.addEventListener("submit", (e) => {
+	e.preventDefault();
+	displayGameGrid();
+});
+menuButton.addEventListener('click', displayMenu);
+document.querySelector('#resumeGame').addEventListener('click', resumeGame);
 window.addEventListener("resize", updatePlayerLabels);

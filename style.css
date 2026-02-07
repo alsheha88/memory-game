@@ -302,8 +302,8 @@ header button {
   align-items: center;
   justify-content: center;
   gap: var(--spacing-400);
-  width: 90rem;
-  max-width: 90%;
+  /* max-width: 90rem; */
+  /* max-width: 95%; */
 }
 
 .score-card {
@@ -311,10 +311,15 @@ header button {
   align-items: center;
   justify-content: space-around;
   height: 4.5rem;
-  width: 16rem;
+  flex: 1 1 12rem;
+  min-width: 14rem;
+  max-width: 18rem;
   border-radius: 0.625rem;
   background-color: var(--color-blue-100);
   position: relative;
+}
+.player-card {
+    
 }
 
 .score-card span {
@@ -358,7 +363,6 @@ header button {
 
 /* ================= MODALS ================= */
 
-.menu-modal,
 .results-modal {
   position: absolute;
   top: 0;
@@ -371,6 +375,19 @@ header button {
   background-color: hsla(0, 0%, 0%, 0.5);
   z-index: 10;
 }
+.menu-modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: hsla(0, 0%, 0%, 0.5);
+  z-index: 10;
+}
+
 
 .menu-container {
   width: 20.4rem;
@@ -497,12 +514,15 @@ header button {
     .results-row{
         max-width: 100%;
     }
+    .player-card{
+        flex-direction: column;
+    }
    
     
     
     
 }
-@media (max-width: 550px) {
+@media (max-width: 600px) {
     header{
         max-width: 95%;
         display: flex;
@@ -520,8 +540,9 @@ header button {
     }
     form button{
         font-size: var(--text-9-size);
+        height: 3rem;
     }
-    .menu{
+    #menu{
         display: flex;
         justify-content: center;
         align-items: center;
@@ -546,6 +567,9 @@ header button {
     --cell-size: 2.93rem;
         width: 324px;
         gap: var(--spacing-100);
+    }
+    .grid-item h1{
+        font-size: var(--text-8-size);
     }
     .score-card{
         flex-direction: column;
@@ -599,5 +623,10 @@ header button {
      .modal-buttons{
         flex-direction: column;
         gap: var(--spacing-200);
+    }
+    .theme-option,
+    .player-option,
+    .grid-option{
+    height: 2.5rem;
     }
 }   
