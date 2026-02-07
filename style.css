@@ -296,31 +296,42 @@ header button {
 
 /* ================= STATS ================= */
 
-.solo-stats,
-.multiplayer-stats {
+.solo-stats{
   display: none;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-400);
-  /* max-width: 90rem; */
-  /* max-width: 95%; */
+  max-width: 90rem;
+  width: 95%;
 }
-
+.multiplayer-stats {
+    display: none;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: var(--spacing-400);
+    max-width: 90rem;
+    width: 95%;
+}
+.multiplayer-stats > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-100);
+    width: 100%;
+    flex-grow: 1;
+}
 .score-card {
   display: flex;
   align-items: center;
   justify-content: space-around;
   height: 4.5rem;
-  flex: 1 1 12rem;
-  min-width: 14rem;
-  max-width: 18rem;
+  max-width: 16rem;
+  width: 100%;
   border-radius: 0.625rem;
   background-color: var(--color-blue-100);
   position: relative;
 }
-.player-card {
-    
-}
+
 
 .score-card span {
   font-size: var(--text-8-size);
