@@ -42,6 +42,7 @@ const gameState = {
     testStartTime: null,
     timerValue: 0,
     currentPlayer: 0,
+    lockBoard: false,
 }
 
 // setup / reset functions
@@ -324,46 +325,65 @@ function setPlayers(){
 }
 
 // gameplay flow
-function selectCard(e){
-    document.querySelectorAll('.grid-item').forEach((item) => {
-        const card = e.currentTarget; // guaranteed to be the .grid-item the handler is bound to
-        const value = card.dataset.value; // dataset on the container element
-        if (!value) return; // guard against missing data, avoid pushing undefined
-        card.firstElementChild.classList.add('selected-card'); // visual
-        card.classList.add('selected');
-        gameState.selectedCard.push(value); // push the real value
-        gameState.selectedItem.push(card);
-        if (gameState.selectedCard.length === 2){
-            if (gameState.selectedCard[0] === gameState.selectedCard[1]) {
-                gameState.selectedItem.forEach((item) => item.parentElement.classList.add('correct'))
-                gameState.correcChoice = true;
-                correctCounter(gameState.correcChoice);
-                // console.log(gameState.correctPairsCount)
-            } else {
-                gameState.correcChoice = false;
-                item.firstElementChild.classList.add('selected-card');
-                item.classList.add('selected');
-                hideWrongSelection()
-                
-            }  
-                
-        } else if (gameState.selectedCard.length > 2) {
-            gameState.selectedCard.shift();
-            gameState.selectedCard.shift();
-            gameState.selectedItem.shift();
-            gameState.selectedItem.shift();
+function selectCard(e) {
+
+    if (gameState.lockBoard) return;
+
+    const card = e.currentTarget;
+
+    if (card.classList.contains('selected')) return;
+
+    const value = card.firstElementChild.dataset.value;
+
+    if (!value) return;
+
+    card.firstElementChild.classList.add('selected-card');
+    card.classList.add('selected');
+
+    gameState.selectedCard.push(value);
+    gameState.selectedItem.push(card);
+
+    if (gameState.selectedCard.length === 2){
+
+        if (gameState.selectedCard[0] === gameState.selectedCard[1]){
+
+            gameState.selectedItem.forEach(card => {
+                card.classList.add('correct');
+            });
+
+            gameState.correcChoice = true;
+            correctCounter(gameState.correcChoice);
+
+        } else {
+
+            gameState.correcChoice = false;
+            gameState.lockBoard = true;
+            hideWrongSelection();
+
         }
-        displaySoloMoveCount()
-        playerTurn() 
-        
-    })
+
+    } else if (gameState.selectedCard.length > 2){
+
+        gameState.selectedCard.shift();
+        gameState.selectedCard.shift();
+        gameState.selectedItem.shift();
+        gameState.selectedItem.shift();
+
+    }
+
+    displaySoloMoveCount();
+    playerTurn();
 }
 function hideWrongSelection(){
     setTimeout(() => {
         gameState.selectedItem.forEach((item) => {
-            item.classList.remove('selected-card');
-            item.parentElement.classList.remove('selected');
-        })
+            item.firstElementChild.classList.remove('selected-card');
+            item.classList.remove('selected');
+        });
+
+        gameState.selectedCard = [];
+        gameState.selectedItem = [];
+        gameState.lockBoard = false;
     }, 700)
 }
 
