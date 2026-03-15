@@ -128,12 +128,12 @@ function restartCurrentGame(){
 
     gameState.index = 0;
     gameState.counter = 0;
-    gameState.intervalId = setInterval(evaluateTimer, 50);
     if (menuModal.style.display === 'flex') {
         menuModal.style.display = 'none';
     }
     if (gameState.playersOption === 'player1') {
         gameState.testStartTime = Date.now();
+        gameState.intervalId = setInterval(evaluateTimer, 50);
         gameState.timerValue = Date.now() - gameState.testStartTime;
         document.querySelector('.move-count').textContent = '0';
     }
@@ -326,7 +326,6 @@ function setPlayers(){
 
 // gameplay flow
 function selectCard(e) {
-
     if (gameState.lockBoard) return;
 
     const card = e.currentTarget;
@@ -501,6 +500,7 @@ function displayMultiPlayerResults(){
 
 // timer helpers
 function evaluateTimer(){
+    if (!gameState.testStartTime) return;
     gameState.timerValue = Math.floor((Date.now() - gameState.testStartTime) / 1000);
     renderTimer(gameState.timerValue);
     const pairs = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2  
