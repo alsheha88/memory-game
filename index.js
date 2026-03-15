@@ -548,5 +548,10 @@ form.addEventListener("submit", (e) => {
 	e.preventDefault();
 	displayGameGrid();
 });
-menuButton.addEventListener('click', displayMenu);
-document.querySelector('#resumeGame').addEventListener('click', resumeGame);
+if (menuButton) {
+    menuButton.addEventListener('click', displayMenu);
+}
+const resumeBtn = document.querySelector('#resumeGame');
+if (resumeBtn) {
+    resumeBtn.addEventListener('click', resumeGame);
+}
