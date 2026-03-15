@@ -326,34 +326,36 @@ function setPlayers(){
 // gameplay flow
 function selectCard(e){
     document.querySelectorAll('.grid-item').forEach((item) => {
-        if (e.target.closest('.grid-item') === item){
-            item.firstElementChild.classList.add('selected-card');
-            item.classList.add('selected'); 
-            gameState.selectedCard.push(e.target.dataset.value)
-            gameState.selectedItem.push(e.target)
-            if (gameState.selectedCard.length === 2){
-                if (gameState.selectedCard[0] === gameState.selectedCard[1]) {
-                    gameState.selectedItem.forEach((item) => item.parentElement.classList.add('correct'))
-                    gameState.correcChoice = true;
-                    correctCounter(gameState.correcChoice);
-                    // console.log(gameState.correctPairsCount)
-                } else {
-                    gameState.correcChoice = false;
-                    item.firstElementChild.classList.add('selected-card');
-                    item.classList.add('selected');
-                    hideWrongSelection()
-                    
-                }  
-                 
-            } else if (gameState.selectedCard.length > 2) {
-                gameState.selectedCard.shift();
-                gameState.selectedCard.shift();
-                gameState.selectedItem.shift();
-                gameState.selectedItem.shift();
-            }
-            displaySoloMoveCount()
-            playerTurn() 
+        const card = e.currentTarget; // guaranteed to be the .grid-item the handler is bound to
+        const value = card.dataset.value; // dataset on the container element
+        if (!value) return; // guard against missing data, avoid pushing undefined
+        card.firstElementChild.classList.add('selected-card'); // visual
+        card.classList.add('selected');
+        gameState.selectedCard.push(value); // push the real value
+        gameState.selectedItem.push(card);
+        if (gameState.selectedCard.length === 2){
+            if (gameState.selectedCard[0] === gameState.selectedCard[1]) {
+                gameState.selectedItem.forEach((item) => item.parentElement.classList.add('correct'))
+                gameState.correcChoice = true;
+                correctCounter(gameState.correcChoice);
+                // console.log(gameState.correctPairsCount)
+            } else {
+                gameState.correcChoice = false;
+                item.firstElementChild.classList.add('selected-card');
+                item.classList.add('selected');
+                hideWrongSelection()
+                
+            }  
+                
+        } else if (gameState.selectedCard.length > 2) {
+            gameState.selectedCard.shift();
+            gameState.selectedCard.shift();
+            gameState.selectedItem.shift();
+            gameState.selectedItem.shift();
         }
+        displaySoloMoveCount()
+        playerTurn() 
+        
     })
 }
 function hideWrongSelection(){
@@ -367,7 +369,6 @@ function hideWrongSelection(){
 
 function playerTurn(){
     if (gameState.playersOption === 'player1') return;
-    
         gameState.playersNumber = document.querySelectorAll('.score-card').length;
         gameState.counter++;
         if (gameState.correcChoice){
