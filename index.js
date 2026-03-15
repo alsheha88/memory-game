@@ -476,7 +476,7 @@ function displayMultiPlayerResults(){
         document.querySelector('.results-modal').style.display = 'flex'
         document.querySelector('.results-container').innerHTML = `
         <div class="modal-heading">
-        <h1>${gameState.playersRanking[0].score === gameState.playersRanking[1].score ? 'It\'s a tie!' : `Player ${gameState.playersRanking[0].playerNumber} wins!`}</h1>
+        <h1>${gameState.playersRanking[1] && gameState.playersRanking[0].score === gameState.playersRanking[1].score ? 'It\'s a tie!' : `Player ${gameState.playersRanking[0].playerNumber} wins!`}</h1>
         <span>Game over! Here are the results…</span>
         </div>
         <div class="results-box">
@@ -536,7 +536,10 @@ function resumeGame(){
 }
 
 // event listeners
-document.querySelector("#menuRestartGame").addEventListener('click', restartCurrentGame);
+const menuRestartBtn = document.querySelector("#menuRestartGame");
+if (menuRestartBtn) {
+    menuRestartBtn.addEventListener('click', restartCurrentGame);
+}
 newGame.forEach((button) => button.addEventListener('click', setupNewGame));
 themeInput.forEach((input) => input.addEventListener("click", setGameConditions));
 numberOfPlayers.forEach((input) => input.addEventListener("click", setGameConditions));
