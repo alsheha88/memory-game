@@ -5,7 +5,6 @@ const gameGrid = document.querySelector("#grid");
 const themeInput = document.getElementsByName("theme");
 const numberOfPlayers = document.getElementsByName("players");
 const gridSize = document.getElementsByName("grid-size");
-const submitBtn = document.querySelector("#submitBtn");
 const form = document.querySelector("form");
 const multiPlayer = document.querySelector('.multiplayer-stats');
 const soloPlayer = document.querySelector('.solo-stats');
@@ -91,7 +90,6 @@ function setupNewGame(){
     const resultsModal = document.querySelector('.results-modal');
     if (resultsModal) resultsModal.style.display = 'none';
 
-    const menuModal = document.querySelector('.menu-modal');
     if (menuModal) menuModal.style.display = 'none';
 
     const resultsContainer = document.querySelector('.results-container');
@@ -549,4 +547,3 @@ form.addEventListener("submit", (e) => {
 });
 menuButton.addEventListener('click', displayMenu);
 document.querySelector('#resumeGame').addEventListener('click', resumeGame);
-window.addEventListener("resize", updatePlayerLabels);
