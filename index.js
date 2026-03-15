@@ -531,7 +531,7 @@ function displayMenu(){
 }
 function resumeGame(){
     menuModal.style.display = 'none';
-    if (gameState.playersOption === 'player1' && !gameState.restartGame) {
+    if (gameState.playersOption === 'player1') {
         gameState.testStartTime = Date.now() - (gameState.timerValue * 1000);
         gameState.intervalId = setInterval(evaluateTimer, 50);
     }
