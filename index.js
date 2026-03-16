@@ -80,7 +80,7 @@ function setupNewGame(){
     gameState.testStartTime = null;
 
     // Clear dynamic DOM
-    gameGrid.innerHTML = '';
+    if (gameGrid) gameGrid.innerHTML = '';
     multiPlayer.innerHTML = '';
     soloPlayer.innerHTML = '';
 
@@ -203,7 +203,9 @@ function setGridSize() {
 
 // grid creation
 function populateRandomNumbers(){
-    const length = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2
+    if (!gameGrid) return;
+    const gridValue = parseInt(gameGrid.getAttribute("data-grid"));
+    const length = (gridValue * gridValue) / 2;
     for (let i = 0; i < length; i++){
         gameState.numbers.push(i);
         gameState.numbers.push(i);
@@ -215,7 +217,9 @@ function populateRandomNumbers(){
 }
 
 function populateGridItem() {
-    const length = parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"));
+    if (!gameGrid) return;
+    const gridValue = parseInt(gameGrid.getAttribute("data-grid"));
+    const length = gridValue * gridValue;
     populateRandomNumbers()
 	for (let i = 0; i < length; i++) {
 		const div = document.createElement("div");
@@ -571,10 +575,12 @@ newGame.forEach((button) => button.addEventListener('click', setupNewGame));
 themeInput.forEach((input) => input.addEventListener("click", setGameConditions));
 numberOfPlayers.forEach((input) => input.addEventListener("click", setGameConditions));
 gridSize.forEach((input) => input.addEventListener("click", setGameConditions));
-form.addEventListener("submit", (e) => {
-	e.preventDefault();
-	displayGameGrid();
-});
+if (form) {
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        displayGameGrid();
+    });
+}
 if (menuButton) {
     menuButton.addEventListener('click', displayMenu);
 }
