@@ -81,11 +81,11 @@ function setupNewGame(){
 
     // Clear dynamic DOM
     if (gameGrid) gameGrid.innerHTML = '';
-    multiPlayer.innerHTML = '';
-    soloPlayer.innerHTML = '';
+    if (multiPlayer) multiPlayer.innerHTML = '';
+    if (soloPlayer) soloPlayer.innerHTML = '';
 
-    multiPlayer.style.display = 'none';
-    soloPlayer.style.display = 'none';
+    if (multiPlayer) multiPlayer.style.display = 'none';
+    if (soloPlayer) soloPlayer.style.display = 'none';
 
     const resultsModal = document.querySelector('.results-modal');
     if (resultsModal) resultsModal.style.display = 'none';
@@ -192,6 +192,7 @@ function displayGameGrid() {
 }
 
 function setGridSize() {
+    if (!gameGrid) return;
 	if (gameState.gridSelection === "grid-6") {
 		gameGrid.setAttribute("data-grid", "6");
 	} else {
@@ -489,8 +490,10 @@ function displayMultiPlayerResults(){
     const pairs = (parseInt(gameGrid.getAttribute("data-grid")) * parseInt(gameGrid.getAttribute("data-grid"))) / 2 
     console.log(gameState.correctPairsCount, pairs)
     if (gameState.correctPairsCount === pairs){
-        document.querySelector('.results-modal').style.display = 'flex'
-        document.querySelector('.results-container').innerHTML = `
+        const resultsModal = document.querySelector('.results-modal');
+        if (resultsModal) resultsModal.style.display = 'flex';
+        const resultsContainer = document.querySelector('.results-container');
+        if (resultsContainer) resultsContainer.innerHTML = `
         <div class="modal-heading">
         <h1>${
           gameState.playersRanking.length > 1 &&
@@ -514,8 +517,10 @@ function displayMultiPlayerResults(){
         
         <div class="modal-buttons">
         <button type="button" data-action="new-game" id="setupNewGame" class="grey-btn">Setup New Game</button>
-        </div>`
-        document.getElementById('setupNewGame').addEventListener('click', setupNewGame);
+        </div>
+        `;
+        const setupBtn = document.getElementById('setupNewGame');
+        if (setupBtn) setupBtn.addEventListener('click', setupNewGame);
     }
 }
 
