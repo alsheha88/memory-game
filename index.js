@@ -126,7 +126,7 @@ function restartCurrentGame(){
 
     gameState.index = 0;
     gameState.counter = 0;
-    if (menuModal.style.display === 'flex') {
+    if (menuModal && menuModal.style.display === 'flex') {
         menuModal.style.display = 'none';
     }
     if (gameState.playersOption === 'player1') {
@@ -520,6 +520,8 @@ function stopTimer() {
 
 // menu / modal helpers (menu/modal)
 function displayMenu(){
+    if (!menuModal) return;
+
     if (menuModal.style.display === 'flex') {
         menuModal.style.display = 'none';
     } else {
@@ -528,7 +530,10 @@ function displayMenu(){
     }
 }
 function resumeGame(){
-    menuModal.style.display = 'none';
+    if (menuModal) {
+        menuModal.style.display = 'none';
+    }
+
     if (gameState.playersOption === 'player1') {
         gameState.testStartTime = Date.now() - (gameState.timerValue * 1000);
         gameState.intervalId = setInterval(evaluateTimer, 50);
