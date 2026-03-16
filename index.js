@@ -344,8 +344,8 @@ function selectCard(e) {
 
         if (gameState.selectedCard[0] === gameState.selectedCard[1]){
 
-            gameState.selectedItem.forEach(card => {
-                card.classList.add('correct');
+            gameState.selectedItem.forEach(item => {
+                item.classList.add('correct');
             });
 
             gameState.correcChoice = true;
