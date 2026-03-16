@@ -330,8 +330,10 @@ function selectCard(e) {
 
     if (card.classList.contains('selected')) return;
 
-    const value = card.firstElementChild.dataset.value;
+    const child = card.firstElementChild;
+    if (!child || !child.dataset) return;
 
+    const value = child.dataset.value;
     if (!value) return;
 
     card.firstElementChild.classList.add('selected-card');
@@ -486,7 +488,14 @@ function displayMultiPlayerResults(){
         document.querySelector('.results-modal').style.display = 'flex'
         document.querySelector('.results-container').innerHTML = `
         <div class="modal-heading">
-        <h1>${gameState.playersRanking[1] && gameState.playersRanking[0].score === gameState.playersRanking[1].score ? 'It\'s a tie!' : `Player ${gameState.playersRanking[0].playerNumber} wins!`}</h1>
+        <h1>${
+          gameState.playersRanking.length > 1 &&
+          gameState.playersRanking[0].score === gameState.playersRanking[1].score
+            ? "It's a tie!"
+            : gameState.playersRanking[0]
+            ? `Player ${gameState.playersRanking[0].playerNumber} wins!`
+            : ""
+        }</h1>
         <span>Game over! Here are the results…</span>
         </div>
         <div class="results-box">
