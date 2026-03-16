@@ -441,8 +441,13 @@ function displaySoloMoveCount(){
 function displaySoloResults(){
     if (gameState.playersOption !== 'player1') return;
     stopTimer()
-    document.querySelector('.results-modal').style.display = 'flex'
-    document.querySelector('.results-container').innerHTML = `
+    const resultsModal = document.querySelector('.results-modal');
+    const resultsContainer = document.querySelector('.results-container');
+
+    if (resultsModal) resultsModal.style.display = 'flex';
+
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
         <div class="modal-heading">
             <h1>You did it!</h1>
             <span>Game over! Here’s how you got on…</span>
@@ -464,9 +469,14 @@ function displaySoloResults(){
         <div class="modal-buttons">
             <button type="button" data-action="restart" id="resultsRestartGame" class="orange-btn">Restart</button>
             <button type="button" data-action="new-game" id="setupNewGame" class="grey-btn">Setup New Game</button>
-        </div>`
-        document.getElementById('setupNewGame').addEventListener('click', setupNewGame);
-        document.getElementById('resultsRestartGame').addEventListener('click', restartCurrentGame);
+        </div>`;
+    }
+
+    const setupBtn = document.getElementById('setupNewGame');
+    if (setupBtn) setupBtn.addEventListener('click', setupNewGame);
+
+    const restartBtn = document.getElementById('resultsRestartGame');
+    if (restartBtn) restartBtn.addEventListener('click', restartCurrentGame);
 }
 function displayMultiPlayerResults(){
     if (gameState.playersOption === 'player1') return;
@@ -509,7 +519,10 @@ function evaluateTimer(){
 function renderTimer(timerValue){
     gameState.minutes = Math.floor(timerValue / 60);
     gameState.seconds = timerValue % 60;
-    document.querySelector('.timer-display').textContent = `${gameState.minutes}:${gameState.seconds < 10 ? `0` : ''}${gameState.seconds}`;
+    const timerDisplay = document.querySelector('.timer-display');
+    if (timerDisplay) {
+        timerDisplay.textContent = `${gameState.minutes}:${gameState.seconds < 10 ? `0` : ''}${gameState.seconds}`;
+    }
 }
 function stopTimer() {
     if (gameState.intervalId !== null) {
